@@ -1,0 +1,162 @@
+{
+  "name": "morphql-vscode",
+  "displayName": "MorphQL",
+  "description": "Syntax highlighting, diagnostics, hover documentation, and execution for Morph Query Language",
+  "version": "0.1.42",
+  "publisher": "morphql",
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Formatters",
+    "Other"
+  ],
+  "keywords": [
+    "morphql",
+    "morph",
+    "query",
+    "transformation",
+    "json",
+    "xml",
+    "data transformation",
+    "query language"
+  ],
+  "galleryBanner": {
+    "color": "#1e293b",
+    "theme": "dark"
+  },
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "morphql",
+        "aliases": [
+          "MorphQL",
+          "Morph Query Language"
+        ],
+        "extensions": [
+          ".morphql"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "morphql",
+        "scopeName": "source.morphql",
+        "path": "./syntaxes/morphql.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.morphql.injection",
+        "path": "./syntaxes/morphql.injection.json",
+        "injectTo": [
+          "source.js",
+          "source.ts",
+          "source.jsx",
+          "source.tsx"
+        ]
+      }
+    ],
+    "snippets": [
+      {
+        "language": "morphql",
+        "path": "./snippets/morphql.json"
+      },
+      {
+        "language": "typescript",
+        "path": "./snippets/morphql-embedded.json"
+      },
+      {
+        "language": "javascript",
+        "path": "./snippets/morphql-embedded.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "morphql.executeWithInput",
+        "title": "MorphQL: Execute with Input Data",
+        "icon": "$(play)"
+      },
+      {
+        "command": "morphql.executeFromClipboard",
+        "title": "MorphQL: Execute with Clipboard Data"
+      },
+      {
+        "command": "morphql.executeSelection",
+        "title": "MorphQL: Execute Selection"
+      },
+      {
+        "command": "morphql.openLivePanel",
+        "title": "MorphQL: Open Live Panel",
+        "icon": "$(open-preview)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "when": "resourceLangId == morphql",
+          "command": "morphql.executeWithInput",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == morphql",
+          "command": "morphql.openLivePanel",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "when": "resourceLangId == morphql",
+          "command": "morphql.executeWithInput",
+          "group": "morphql@1"
+        },
+        {
+          "when": "resourceLangId == morphql",
+          "command": "morphql.executeFromClipboard",
+          "group": "morphql@2"
+        },
+        {
+          "when": "editorHasSelection && (resourceLangId == typescript || resourceLangId == javascript || resourceLangId == typescriptreact || resourceLangId == javascriptreact)",
+          "command": "morphql.executeSelection",
+          "group": "morphql@3"
+        },
+        {
+          "when": "resourceLangId == morphql",
+          "command": "morphql.openLivePanel",
+          "group": "morphql@4"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "prebuild": "node copy-prism.mjs && npm run regenerate-grammar",
+    "vscode:prepublish": "npm run build",
+    "build": "rollup -c",
+    "compile": "rollup -c",
+    "watch": "rollup -c -w",
+    "package": "vsce package --no-dependencies",
+    "regenerate-grammar": "node regenerate-grammar.mjs"
+  },
+  "dependencies": {
+    "@morphql/core": "file:../core",
+    "@morphql/language-definitions": "file:../language-definitions"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-typescript": "^12.3.0",
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.75.0",
+    "@vscode/vsce": "^3.2.1",
+    "rollup": "^4.55.2",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hyperwindmill/morphql.git"
+  },
+  "license": "MIT"
+}
