@@ -1,0 +1,46 @@
+{
+  "name": "@morphql/server",
+  "version": "0.1.41",
+  "description": "MorphQL Server Core - Headless transformation engine",
+  "author": "Hyperwindmill",
+  "private": false,
+  "license": "MIT",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hyperwindmill/morphql.git",
+    "directory": "packages/server"
+  },
+  "bugs": {
+    "url": "https://github.com/Hyperwindmill/morphql/issues"
+  },
+  "homepage": "https://github.com/Hyperwindmill/morphql/tree/main/packages/server#readme",
+  "dependencies": {
+    "js-yaml": "^4.1.1"
+  },
+  "peerDependencies": {
+    "@morphql/core": "^0.1.41"
+  },
+  "devDependencies": {
+    "@morphql/core": "^0.1.41",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^25.2.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  },
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint": "eslint \"{src,test}/**/*.ts\" --fix"
+  }
+}
