@@ -1,0 +1,52 @@
+{
+  "name": "@morphql/language-definitions",
+  "version": "0.1.45",
+  "description": "Shared language definitions for MorphQL across VSCode, Monaco, and documentation",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean && npm run export-json",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "export-json": "tsx export-json.ts"
+  },
+  "keywords": [
+    "morphql",
+    "language",
+    "definitions",
+    "vscode",
+    "monaco"
+  ],
+  "author": "Hyperwindmill",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hyperwindmill/morphql.git",
+    "directory": "packages/language-definitions"
+  },
+  "bugs": {
+    "url": "https://github.com/Hyperwindmill/morphql/issues"
+  },
+  "homepage": "https://github.com/Hyperwindmill/morphql/tree/main/packages/language-definitions#readme",
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
