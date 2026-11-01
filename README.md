@@ -1,0 +1,130 @@
+# MorphQL PHP
+
+[![Packagist Version](https://img.shields.io/packagist/v/morphql/morphql)](https://packagist.org/packages/morphql/morphql)
+[![PHP](https://img.shields.io/packagist/php-v/morphql/morphql)](https://packagist.org/packages/morphql/morphql)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+
+A minimalist PHP wrapper for [MorphQL](https://github.com/Hyperwindmill/morphql) — transform data with declarative queries.
+
+**PHP 5.6+ compatible · Bundled engine · Composer-ready**
+
+## Installation
+
+```bash
+composer require morphql/morphql
+```
+
+### Prerequisites
+
+The package ships with the **MorphQL engine pre-bundled**. You have two options for execution:
+
+1.  **Node.js** (Default): Requires Node.js v18+ installed on the system.
+2.  **QuickJS** (Embedded): Self-contained, **zero external dependencies**. Binaries are automatically downloaded upon installation.
+
+## Quick Start
+
+```php
+<?php
+require 'vendor/autoload.php';
+
+use MorphQL\MorphQL;
+
+// One-shot transformation via CLI
+$result = MorphQL::execute(
+    'from json to json transform set greeting = "Hello, " + name',
+    '{"name": "World"}'
+);
+// → '{"greeting":"Hello, World"}'
+```
+
+## Usage
+
+### Static API
+
+```php
+// PHP 8+ with named parameters
+$result = MorphQL::execute(
+    query: 'from json to json transform set x = a + b',
+    data: '{"a": 1, "b": 2}'
+);
+
+// PHP 5.6-7.x — single options array
+$result = MorphQL::execute(array(
+    'query' => 'from json to json transform set x = a + b',
+    'data'  => '{"a": 1, "b": 2}',
+));
+```
+
+### Reusable Instance
+
+```php
+// Preset defaults in the constructor
+$morph = new MorphQL(array(
+    'provider'   => 'server',
+    'server_url' => 'http://localhost:3000',
+    'api_key'    => 'my-secret',
+));
+
+$result = $morph->run('from json to xml', $data);
+$other  = $morph->run('from json to json transform set id = uuid', $data2);
+```
+
+## Providers
+
+| Provider | Backend             | Transport                  | Runtime         |
+| :------- | :------------------ | :------------------------- | :-------------- |
+| `cli`    | Bundled engine      | `proc_open()` / shell      | `node` or `qjs` |
+| `server` | MorphQL REST server | cURL / `file_get_contents` | —               |
+
+The CLI provider auto-detects the bundled engine. By default, it uses **Node.js**, but it can be configured to use an embedded **QuickJS** runtime for a completely self-contained setup.
+
+### Node-less Runtime (QuickJS)
+
+For a completely self-contained setup without Node.js, simply configure MorphQL to use the embedded QuickJS runtime:
+
+```php
+$morph = new MorphQL(['runtime' => 'qjs']);
+```
+
+> [!TIP]
+> **Automatic Installation**: QuickJS binaries for your platform are automatically downloaded by Composer. If you need to reinstall them manually, run `php bin/install-qjs.php`.
+
+## Configuration
+
+Options are resolved in priority order: **call params → constructor → env vars → defaults**.
+
+| Option       | Env Var              | Default                      | Description              |
+| :----------- | :------------------- | :--------------------------- | :----------------------- |
+| `provider`   | `MORPHQL_PROVIDER`   | `cli`                        | `cli` or `server`        |
+| `runtime`    | `MORPHQL_RUNTIME`    | `node`                       | `node` or `qjs`          |
+| `cli_path`   | `MORPHQL_CLI_PATH`   | _(auto)_                     | Override CLI binary path |
+| `node_path`  | `MORPHQL_NODE_PATH`  | `node`                       | Path to Node.js binary   |
+| `qjs_path`   | `MORPHQL_QJS_PATH`   | _(auto)_                     | Path to QuickJS binary   |
+| `cache_dir`  | `MORPHQL_CACHE_DIR`  | `sys_get_temp_dir()/morphql` | CLI query cache dir      |
+| `server_url` | `MORPHQL_SERVER_URL` | `http://localhost:3000`      | Server base URL          |
+| `api_key`    | `MORPHQL_API_KEY`    | _(none)_                     | API key for server auth  |
+| `timeout`    | `MORPHQL_TIMEOUT`    | `30`                         | Timeout in seconds       |
+
+### Environment Variables
+
+```bash
+export MORPHQL_PROVIDER=server
+export MORPHQL_SERVER_URL=http://my-morphql:3000
+export MORPHQL_API_KEY=secret123
+```
+
+## Error Handling
+
+```php
+try {
+    $result = MorphQL::execute('invalid query', '{}');
+} catch (\RuntimeException $e) {
+    echo 'Transform failed: ' . $e->getMessage();
+} catch (\InvalidArgumentException $e) {
+    echo 'Bad input: ' . $e->getMessage();
+}
+```
+
+## License
+
+MIT © 2026 Hyperwindmill
